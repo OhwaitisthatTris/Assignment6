@@ -6,7 +6,7 @@
 # GitHub Copilot, TabNine, etc. when working on this file.
 # Writing a data structure yourself is the best
 # way to learn how it works.
-# Modified by: 
+# Modified by: Tristan Crawford
 from random import randint
 
 class HashTable:
@@ -21,29 +21,45 @@ class HashTable:
     def _hash(self, key):
         return hash(key) % self.slots
 
-    # insert a new key-value pair into the 
-    # hash table or if the key is already present
-    # update its associated value
-    # make sure to resize if MAX_LOAD_FACTOR is exceeded
+
     def insert(self, key, value):
-        # YOUR CODE HERE
-        pass
+         chain = self.backing_store[self._hash(key)]
+        for pair in chain:
+            if pair[0] == key:
+                pair[1] = value
+                return
+         chain.append([key, value])
+        self.num_items += 1
+        if self.num_items / self.slots > HashTable.MAX_LOAD_FACTOR:
+            self._resize()
 
-    # return the value associated with the key
     def get(self, key):
-        # YOUR CODE HERE
-        pass
 
-    # eliminate the key-value pair associated with key
+        for pair in self.backing_store[self._hash(key)]:
+            if pair[0] == key:
+                return pair[1]   
+        return None
+        
+
     def remove(self, key):
-        # YOUR CODE HERE
-        pass
+         chain = self.backing_store[self._hash(key)]
+         for i in range(len(chain)):
+            if chain[i][0] == key:
+                del chain[i]
+                self.num_items -= 1
+                return True
+
+         return False       
     
     # update the hash table based on GROWTH_FACTOR
     # make sure to move everything over to the new table
     def _resize(self):
-        # YOUR CODE HERE
-        pass
+        self.slots = self.slots * HashTable.GROWTH_FACTOR
+        self.backing_store = [[] for _ in range(self.slots)]
+        for chain in old_store:
+            for pair in chain:
+               
+                self.backing_store[self._hash(pair[0])].append(pair)        
 
     def __str__(self):
         return str(self.backing_store)
