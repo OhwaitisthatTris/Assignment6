@@ -60,5 +60,3 @@ class HashTable:
  
     def __str__(self):
         return str(self.backing_store)
- 
-Claude finished the response
